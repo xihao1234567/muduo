@@ -35,7 +35,7 @@ EventLoopThread::~EventLoopThread()
     thread_.join();
   }
 }
-
+//该函数为线程启动的函数，在由EventLoopThreadPool类中调用
 EventLoop* EventLoopThread::startLoop()
 {
   assert(!thread_.started());
@@ -53,7 +53,7 @@ EventLoop* EventLoopThread::startLoop()
 
   return loop;
 }
-
+//线程start后执行的函数
 void EventLoopThread::threadFunc()
 {
   EventLoop loop;
