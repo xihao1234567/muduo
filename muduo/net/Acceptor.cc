@@ -24,7 +24,7 @@ using namespace muduo::net;
 
 Acceptor::Acceptor(EventLoop* loop, const InetAddress& listenAddr, bool reuseport)
   : loop_(loop),
-    acceptSocket_(sockets::createNonblockingOrDie(listenAddr.family())),
+    acceptSocket_(sockets::createNonblockingOrDie(listenAddr.family())),  //调用Socket中socket创建fd，作为传入参数
     acceptChannel_(loop, acceptSocket_.fd()),
     listenning_(false),
     idleFd_(::open("/dev/null", O_RDONLY | O_CLOEXEC))
@@ -48,8 +48,8 @@ void Acceptor::listen()
 {
   loop_->assertInLoopThread();
   listenning_ = true;
-  acceptSocket_.listen();
-  acceptChannel_.enableReading();
+  acceptSocket_.listen();   //调用socket listen监听，fd的创建在构造函数中已经初始化
+  acceptChannel_.enableReading();   //该函数调用updata更新loop中的poller监听的fd
 }
 
 void Acceptor::handleRead()
