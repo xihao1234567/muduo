@@ -42,12 +42,12 @@ void EventLoopThreadPool::start(const ThreadInitCallback& cb)
     char buf[name_.size() + 32];
     snprintf(buf, sizeof buf, "%s%d", name_.c_str(), i);
     EventLoopThread* t = new EventLoopThread(cb, buf);
-    threads_.push_back(std::unique_ptr<EventLoopThread>(t));
-    loops_.push_back(t->startLoop());
+    threads_.push_back(std::unique_ptr<EventLoopThread>(t));  
+    loops_.push_back(t->startLoop());  //启动线程，并且开始loop循环
   }
   if (numThreads_ == 0 && cb)
   {
-    cb(baseLoop_);
+    cb(baseLoop_);    //应该是不使用线程池，由用户自己注册回调函数
   }
 }
 
