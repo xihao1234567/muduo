@@ -67,11 +67,11 @@ void TcpServer::start()
         std::bind(&Acceptor::listen, get_pointer(acceptor_)));
   }
 }
-
+//当有连接到来时，在acceptor中的回调函数，创建一个新的tcpconnection
 void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr)
 {
   loop_->assertInLoopThread();
-  EventLoop* ioLoop = threadPool_->getNextLoop();
+  EventLoop* ioLoop = threadPool_->getNextLoop();  //自我感觉是循环链表
   char buf[64];
   snprintf(buf, sizeof buf, "-%s#%d", ipPort_.c_str(), nextConnId_);
   ++nextConnId_;
@@ -88,7 +88,7 @@ void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr)
                                           sockfd,
                                           localAddr,
                                           peerAddr));
-  connections_[connName] = conn;
+  connections_[connName] = conn;   //server管理这些new tcpconnection连接
   conn->setConnectionCallback(connectionCallback_);
   conn->setMessageCallback(messageCallback_);
   conn->setWriteCompleteCallback(writeCompleteCallback_);
