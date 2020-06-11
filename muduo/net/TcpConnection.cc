@@ -320,6 +320,7 @@ void TcpConnection::stopReadInLoop()
   }
 }
 
+//连接时会调用，给fd对应的channel注册回调函数
 void TcpConnection::connectEstablished()
 {
   loop_->assertInLoopThread();
@@ -344,6 +345,7 @@ void TcpConnection::connectDestroyed()
   channel_->remove();
 }
 
+//fd可读时，会调用该函数，如果读到的数据长度为0,则直接关闭连接。可能是对方已经关闭连接了。
 void TcpConnection::handleRead(Timestamp receiveTime)
 {
   loop_->assertInLoopThread();
