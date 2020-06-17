@@ -71,7 +71,7 @@ void TcpServer::start()
 void TcpServer::newConnection(int sockfd, const InetAddress& peerAddr)
 {
   loop_->assertInLoopThread();
-  EventLoop* ioLoop = threadPool_->getNextLoop();  //自我感觉是循环链表
+  EventLoop* ioLoop = threadPool_->getNextLoop();  //自我感觉是循环链表，但是使用的是数组，当大于size时，将索引置为0
   char buf[64];
   snprintf(buf, sizeof buf, "-%s#%d", ipPort_.c_str(), nextConnId_);
   ++nextConnId_;
