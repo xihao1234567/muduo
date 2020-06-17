@@ -39,14 +39,14 @@ EventLoopThread::~EventLoopThread()
 EventLoop* EventLoopThread::startLoop()
 {
   assert(!thread_.started());
-  thread_.start();
+  thread_.start();   //启动子线程，执行loop.loop()
 
-  EventLoop* loop = NULL;
+  EventLoop* loop = NULL;   //如果为空，则表示子线程还未执行
   {
-    MutexLockGuard lock(mutex_);
+    MutexLockGuard lock(mutex_);   //需要加锁
     while (loop_ == NULL)
     {
-      cond_.wait();
+      cond_.wait();   //等待子线程先运行，然后返回loop到EventLoopThreadPool类中
     }
     loop = loop_;
   }
@@ -65,13 +65,13 @@ void EventLoopThread::threadFunc()
 
   {
     MutexLockGuard lock(mutex_);
-    loop_ = &loop;
-    cond_.notify();
+    loop_ = &loop;   //让主线程跳出while，然后返回
+    cond_.notify();  //唤醒条件变量
   }
 
   loop.loop();
   //assert(exiting_);
-  MutexLockGuard lock(mutex_);
+  MutexLockGuard lock(mutex_);  //执行完loop需要将loop_变为NULL
   loop_ = NULL;
 }
 
