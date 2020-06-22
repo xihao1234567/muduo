@@ -332,13 +332,15 @@ void TcpConnection::connectEstablished()
   connectionCallback_(shared_from_this());    //调用  void muduo::net::defaultConnectionCallback，该函数在Callback.h中声明，在本类中定义
 }
 
+
+//当关闭该tcpconnection时，该函数通常在主线程中调用
 void TcpConnection::connectDestroyed()
 {
   loop_->assertInLoopThread();
   if (state_ == kConnected)
   {
     setState(kDisconnected);
-    channel_->disableAll();
+    channel_->disableAll();   //两次调用它
 
     connectionCallback_(shared_from_this());
   }
