@@ -326,10 +326,10 @@ void TcpConnection::connectEstablished()
   loop_->assertInLoopThread();
   assert(state_ == kConnecting);
   setState(kConnected);
-  channel_->tie(shared_from_this());
-  channel_->enableReading();
+  channel_->tie(shared_from_this());  //给channel传入当前的conn对象
+  channel_->enableReading();    //更新poll中的监听的fd，channel中的回调函数在构造函数中设置
 
-  connectionCallback_(shared_from_this());
+  connectionCallback_(shared_from_this());    //调用  void muduo::net::defaultConnectionCallback，该函数在Callback.h中声明，在本类中定义
 }
 
 void TcpConnection::connectDestroyed()
