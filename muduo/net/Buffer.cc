@@ -27,10 +27,10 @@ ssize_t Buffer::readFd(int fd, int* savedErrno)
   // saved an ioctl()/FIONREAD call to tell how much to read
   char extrabuf[65536];
   struct iovec vec[2];
-  const size_t writable = writableBytes();
-  vec[0].iov_base = begin()+writerIndex_;
-  vec[0].iov_len = writable;
-  vec[1].iov_base = extrabuf;
+  const size_t writable = writableBytes();   //buffer中可写的最大长度
+  vec[0].iov_base = begin()+writerIndex_;    //写的起始地址
+  vec[0].iov_len = writable;              //写的长读
+  vec[1].iov_base = extrabuf;             
   vec[1].iov_len = sizeof extrabuf;
   // when there is enough space in this buffer, don't read into extrabuf.
   // when extrabuf is used, we read 128k-1 bytes at most.
