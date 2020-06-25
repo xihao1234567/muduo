@@ -47,7 +47,7 @@ void EventLoopThreadPool::start(const ThreadInitCallback& cb)
   }
   if (numThreads_ == 0 && cb)
   {
-    cb(baseLoop_);    //应该是不使用线程池，由用户自己注册回调函数
+    cb(baseLoop_);    //由用户自己注册回调函数，返回调用者的loop对象
   }
 }
 
